@@ -25,18 +25,6 @@ Uma **Loja Online de eletrónica** ("circuitOS"), composta por duas partes:
 * **Capítulos do relatório** estão na pasta [relatorio](relatorio/).
 * **Orquestração Docker** (multi-container: base de dados + API + Web) em [docker-compose.yml](docker-compose.yml).
 
-## Galeria
-
-| Ecrã de Login | Painel Principal | Gestão de Produtos |
-|---|---|---|
-| _[screenshot a adicionar]_ | _[screenshot a adicionar]_ | _[screenshot a adicionar]_ |
-
-| Catálogo de Categorias | Carrinho / Nova Encomenda | Documentação Swagger |
-|---|---|---|
-| _[screenshot a adicionar]_ | _[screenshot a adicionar]_ | _[screenshot a adicionar]_ |
-
-> Substituir cada célula por `![descrição](caminho/para/imagem.png)` com screenshots reais da aplicação a correr.
-
 ## Tecnologias
 
 * [Node.js](https://nodejs.org/en/) — ambiente de execução do servidor aplicacional
