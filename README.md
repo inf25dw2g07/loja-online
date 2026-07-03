@@ -1,8 +1,7 @@
 # Loja Online — Desenvolvimento Web II
 
 Repositório do trabalho prático de avaliação final, unidade curricular de Desenvolvimento Web II, 2º ano,
-Universidade da Maia. Desenvolvido pelo Grupo [Nº do grupo] — [Nome Completo 1] ([@github1](https://github.com/github1)), [Nome Completo 2] ([@github2](https://github.com/github2)), [Nome Completo 3] ([@github3](https://github.com/github3)).
-
+Universidade da Maia. Desenvolvido pelo Grupo inf25dw2g07 — Rodrigo Vieira, Joao Mendes.
 ## Descrição do tema
 
 Uma **Loja Online de eletrónica** ("circuitOS"), composta por duas partes:
@@ -72,8 +71,3 @@ Utilizadores de demonstração (seed): `admin` / `password123` (perfil admin) e 
 (perfil cliente). Ver [relatorio/relatorio-parte1.md](relatorio/relatorio-parte1.md) para mais detalhes de
 configuração e testes.
 
-## Equipa
-
-* [Nome Completo 1] — [@github1](https://github.com/github1)
-* [Nome Completo 2] — [@github2](https://github.com/github2)
-* [Nome Completo 3] — [@github3](https://github.com/github3)
