@@ -61,25 +61,7 @@ A interface adapta-se ao `role` do utilizador autenticado (devolvido pela API):
 Mesmo que a interface esconda botões de gestão para um `cliente`, a regra de autorização é sempre imposta
 **do lado da API** (a UI é apenas uma conveniência — nunca a única barreira de segurança).
 
-## 5. Estrutura da aplicação
-
-```
-web/
-├── src/
-│   ├── api/            # client axios + módulos por recurso (categorias, produtos, encomendas, auth)
-│   ├── context/         # AuthContext (sessão, login, logout)
-│   ├── components/      # Layout (sidebar), ProtectedRoute, StatusPill, Spinner
-│   ├── pages/            # Login, Home, Categorias, Produtos, CategoriaProdutos,
-│   │                      # Encomendas, EncomendaDetalhe, NovaEncomenda, NotFound
-│   ├── styles/           # tokens.css (paleta/tipografia) + global.css
-│   ├── App.jsx           # rotas
-│   └── main.jsx
-├── Dockerfile             # build multi-stage (Vite → Nginx)
-├── nginx.conf
-└── vite.config.js
-```
-
-## 6. Funcionalidades principais
+## 5. Funcionalidades principais
 
 - **Painel (`/`)**: estatísticas agregadas (nº categorias, produtos, encomendas, valor total) e encomendas
   recentes.
@@ -96,57 +78,14 @@ web/
 
 ## 7. Como executar
 
-**Via Docker (recomendado, stack completa):**
+**Via Docker:**
 ```bash
 docker compose up --build
 ```
 - Web: `http://localhost:5173`
 - API: `http://localhost:3000` (documentação em `/docs`)
 
-**Em desenvolvimento (sem Docker):**
-```bash
-cd web
-cp .env.example .env
-npm install
-npm run dev
-```
-
-Utilizadores de teste (seed da Parte 1): `admin` / `password123` (role `admin`); `jsilva` / `password123`
-(role `cliente`).
-
-## 8. Dificuldades e Aprendizagens
-
-**Persistência da sessão entre recarregamentos de página.** Uma SPA perde o estado em memória sempre que a
-página é recarregada (F5) ou aberta num novo separador. Para o utilizador não ter de fazer login a cada
-navegação, a sessão (token + dados do utilizador) é guardada em `localStorage` e lida na inicialização do
-`AuthContext`. Isto levantou a questão de como reagir quando o token guardado já expirou — resolvido com um
-interceptor de resposta do Axios que deteta qualquer `401` vindo da API, limpa a sessão local e redireciona
-para `/login` de forma transparente, em vez de a aplicação ficar "presa" a mostrar erros.
-
-**Distinguir erros 401 de 403 na interface.** A API devolve `401` quando não há autenticação válida (token
-em falta/expirado) e `403` quando o utilizador está autenticado mas não tem permissão sobre aquele recurso
-específico (por exemplo, tentar ver a encomenda de outro cliente). Tratámo-los de forma diferente na UI: o
-`401` força logout/novo login; o `403` mostra uma mensagem de "sem permissão" sem forçar logout, porque o
-utilizador continua validamente autenticado.
-
-**Construção do carrinho de compras antes de submeter a encomenda.** Ao contrário de um CRUD simples, a
-criação de uma encomenda na Parte 1 espera um único pedido `POST` com todas as linhas (produto + quantidade)
-de uma só vez, não uma linha de cada vez. Isto exigiu manter o "carrinho" como estado local do componente
-(um objeto `{ produto_id: quantidade }`) até o utilizador confirmar, e só nesse momento montar o `payload`
-completo e chamar a API — espelhando, do lado do cliente, a transação atómica implementada no servidor.
-
-**Refletir permissões na interface sem duplicar a lógica de negócio.** Optámos por esconder ações (botões de
-criar/editar/apagar) que o `role` do utilizador não permite, para uma experiência mais limpa — mas sem nunca
-assumir que isso substitui a validação do servidor. A API continua a ser a única fonte de verdade sobre
-permissões; a interface é só uma camada de conveniência.
-
-**Routing client-side em produção (Nginx).** Ao contrário do servidor de desenvolvimento do Vite, que trata
-automaticamente rotas como `/encomendas/3`, um servidor Nginx "genérico" devolveria `404` para qualquer
-caminho que não corresponda a um ficheiro real no disco. Foi necessário configurar explicitamente
-`try_files $uri $uri/ /index.html;` no `nginx.conf`, para que qualquer rota da SPA seja sempre servida pelo
-`index.html` e entregue ao React Router tratar a navegação.
-
-## 9. Conclusão
+## 7. Conclusão
 
 A Parte 2 cumpre o objetivo de disponibilizar uma aplicação Web cliente em ReactJS que consome e gere os
 recursos da API REST da Parte 1, através de uma camada de autenticação e autorização OAuth 2.0 partilhada
