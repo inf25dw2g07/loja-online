@@ -1,0 +1,36 @@
+:root {
+  /* Cor — inspirada em placas de circuito: fundo tinta, traços teal, LED âmbar */
+  --ink-900: #0b1220;
+  --ink-800: #121b2e;
+  --ink-700: #1a2540;
+  --ink-600: #263356;
+  --line: #2a3555;
+
+  --paper-0: #f7f8fb;
+  --paper-1: #ffffff;
+  --paper-2: #eef1f7;
+
+  --text-hi: #eef2fb;
+  --text-lo: #94a3c4;
+  --text-ink: #131a2b;
+  --text-muted: #5b6786;
+
+  --trace: #34d1bd;       /* teal — traço de circuito, ação primária */
+  --trace-dim: #1f8f80;
+  --led: #ffb238;         /* âmbar — indicador / destaque */
+  --led-dim: #b97c1c;
+  --signal-ok: #34d1bd;
+  --signal-warn: #ffb238;
+  --signal-bad: #ff6b6b;
+  --signal-neutral: #7c88ab;
+
+  --radius-s: 6px;
+  --radius-m: 10px;
+  --radius-l: 16px;
+
+  --font-display: 'Space Grotesk', 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', monospace;
+
+  --shadow-card: 0 1px 2px rgba(11, 18, 32, 0.06), 0 8px 24px -12px rgba(11, 18, 32, 0.18);
+}

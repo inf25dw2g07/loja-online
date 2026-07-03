@@ -1,0 +1,214 @@
+{
+  "info": {
+    "name": "Loja Online API",
+    "description": "Collection para testar a API REST da Loja Online (DW2 UMAIA 2025/26)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:3000" },
+    { "key": "access_token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "Obter Token (password grant)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const json = pm.response.json();",
+                  "pm.collectionVariables.set('access_token', json.access_token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "grant_type", "value": "password" },
+                { "key": "username", "value": "jsilva" },
+                { "key": "password", "value": "password123" },
+                { "key": "client_id", "value": "loja-web-client" },
+                { "key": "client_secret", "value": "loja-web-secret" }
+              ]
+            },
+            "url": { "raw": "{{base_url}}/oauth/token", "host": ["{{base_url}}"], "path": ["oauth", "token"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categorias",
+      "item": [
+        {
+          "name": "Listar Categorias",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/categorias", "host": ["{{base_url}}"], "path": ["api", "categorias"] }
+          }
+        },
+        {
+          "name": "Obter Categoria por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/categorias/1", "host": ["{{base_url}}"], "path": ["api", "categorias", "1"] }
+          }
+        },
+        {
+          "name": "Listar Produtos de uma Categoria",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/categorias/1/produtos", "host": ["{{base_url}}"], "path": ["api", "categorias", "1", "produtos"] }
+          }
+        },
+        {
+          "name": "Criar Categoria",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Nova Categoria\",\n  \"descricao\": \"Descrição de teste\"\n}" },
+            "url": { "raw": "{{base_url}}/api/categorias", "host": ["{{base_url}}"], "path": ["api", "categorias"] }
+          }
+        },
+        {
+          "name": "Atualizar Categoria",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Categoria Atualizada\",\n  \"descricao\": \"Nova descrição\"\n}" },
+            "url": { "raw": "{{base_url}}/api/categorias/1", "host": ["{{base_url}}"], "path": ["api", "categorias", "1"] }
+          }
+        },
+        {
+          "name": "Apagar Categoria",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/categorias/1", "host": ["{{base_url}}"], "path": ["api", "categorias", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produtos",
+      "item": [
+        {
+          "name": "Listar Produtos",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/produtos", "host": ["{{base_url}}"], "path": ["api", "produtos"] }
+          }
+        },
+        {
+          "name": "Obter Produto por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/produtos/1", "host": ["{{base_url}}"], "path": ["api", "produtos", "1"] }
+          }
+        },
+        {
+          "name": "Criar Produto",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Produto Teste\",\n  \"descricao\": \"Descrição\",\n  \"preco\": 99.90,\n  \"stock\": 10,\n  \"categoria_id\": 1\n}" },
+            "url": { "raw": "{{base_url}}/api/produtos", "host": ["{{base_url}}"], "path": ["api", "produtos"] }
+          }
+        },
+        {
+          "name": "Atualizar Produto",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"nome\": \"Produto Atualizado\",\n  \"descricao\": \"Descrição\",\n  \"preco\": 79.90,\n  \"stock\": 5,\n  \"categoria_id\": 1\n}" },
+            "url": { "raw": "{{base_url}}/api/produtos/1", "host": ["{{base_url}}"], "path": ["api", "produtos", "1"] }
+          }
+        },
+        {
+          "name": "Apagar Produto",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/produtos/1", "host": ["{{base_url}}"], "path": ["api", "produtos", "1"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Encomendas",
+      "item": [
+        {
+          "name": "Listar Encomendas (do utilizador autenticado)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/encomendas", "host": ["{{base_url}}"], "path": ["api", "encomendas"] }
+          }
+        },
+        {
+          "name": "Obter Encomenda por ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/encomendas/1", "host": ["{{base_url}}"], "path": ["api", "encomendas", "1"] }
+          }
+        },
+        {
+          "name": "Criar Encomenda",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"pendente\",\n  \"linhas\": [\n    { \"produto_id\": 1, \"quantidade\": 2 },\n    { \"produto_id\": 3, \"quantidade\": 1 }\n  ]\n}" },
+            "url": { "raw": "{{base_url}}/api/encomendas", "host": ["{{base_url}}"], "path": ["api", "encomendas"] }
+          }
+        },
+        {
+          "name": "Atualizar Estado da Encomenda",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{access_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": { "mode": "raw", "raw": "{\n  \"estado\": \"pago\"\n}" },
+            "url": { "raw": "{{base_url}}/api/encomendas/1", "host": ["{{base_url}}"], "path": ["api", "encomendas", "1"] }
+          }
+        },
+        {
+          "name": "Apagar Encomenda",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{access_token}}" }],
+            "url": { "raw": "{{base_url}}/api/encomendas/1", "host": ["{{base_url}}"], "path": ["api", "encomendas", "1"] }
+          }
+        }
+      ]
+    }
+  ]
+}

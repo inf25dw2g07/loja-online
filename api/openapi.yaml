@@ -1,0 +1,235 @@
+openapi: 3.0.3
+info:
+  title: Loja Online API
+  description: API REST para gestão de uma loja online (Categorias, Produtos, Encomendas). Trabalho de DW2 - UMAIA 2025/26.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Ambiente de desenvolvimento (Docker)
+
+tags:
+  - name: Autenticação
+  - name: Categorias
+  - name: Produtos
+  - name: Encomendas
+
+paths:
+  /oauth/token:
+    post:
+      tags: [Autenticação]
+      summary: Obter um access token (OAuth2 Resource Owner Password Credentials Grant)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                grant_type: { type: string, example: password }
+                username: { type: string, example: jsilva }
+                password: { type: string, example: password123 }
+                client_id: { type: string, example: loja-web-client }
+                client_secret: { type: string, example: loja-web-secret }
+              required: [grant_type, username, password, client_id, client_secret]
+      responses:
+        '200':
+          description: Token emitido com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: { type: string }
+                  refresh_token: { type: string }
+                  token_type: { type: string, example: Bearer }
+                  expires_in: { type: integer }
+        '400':
+          description: Credenciais inválidas
+
+  /api/categorias:
+    get:
+      tags: [Categorias]
+      summary: Listar todas as categorias
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Lista de categorias }
+    post:
+      tags: [Categorias]
+      summary: Criar uma nova categoria
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CategoriaInput' }
+      responses:
+        '201': { description: Categoria criada }
+
+  /api/categorias/{id}:
+    get:
+      tags: [Categorias]
+      summary: Obter uma categoria por id
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '200': { description: Categoria encontrada }
+        '404': { description: Categoria não encontrada }
+    put:
+      tags: [Categorias]
+      summary: Atualizar uma categoria
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CategoriaInput' }
+      responses:
+        '200': { description: Categoria atualizada }
+    delete:
+      tags: [Categorias]
+      summary: Apagar uma categoria
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '204': { description: Categoria apagada }
+
+  /api/categorias/{id}/produtos:
+    get:
+      tags: [Categorias]
+      summary: Listar produtos de uma categoria (relação 1:n)
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '200': { description: Lista de produtos da categoria }
+
+  /api/produtos:
+    get:
+      tags: [Produtos]
+      summary: Listar todos os produtos
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Lista de produtos }
+    post:
+      tags: [Produtos]
+      summary: Criar um novo produto
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProdutoInput' }
+      responses:
+        '201': { description: Produto criado }
+
+  /api/produtos/{id}:
+    get:
+      tags: [Produtos]
+      summary: Obter um produto por id
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '200': { description: Produto encontrado }
+    put:
+      tags: [Produtos]
+      summary: Atualizar um produto
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/ProdutoInput' }
+      responses:
+        '200': { description: Produto atualizado }
+    delete:
+      tags: [Produtos]
+      summary: Apagar um produto
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '204': { description: Produto apagado }
+
+  /api/encomendas:
+    get:
+      tags: [Encomendas]
+      summary: Listar encomendas do utilizador autenticado (admin vê todas)
+      security: [{ bearerAuth: [] }]
+      responses:
+        '200': { description: Lista de encomendas }
+    post:
+      tags: [Encomendas]
+      summary: Criar uma nova encomenda associada ao utilizador autenticado
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/EncomendaInput' }
+      responses:
+        '201': { description: Encomenda criada }
+
+  /api/encomendas/{id}:
+    get:
+      tags: [Encomendas]
+      summary: Obter uma encomenda (apenas dona ou admin)
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '200': { description: Encomenda encontrada }
+        '403': { description: Sem permissão }
+    put:
+      tags: [Encomendas]
+      summary: Atualizar o estado de uma encomenda
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '200': { description: Encomenda atualizada }
+    delete:
+      tags: [Encomendas]
+      summary: Apagar uma encomenda
+      security: [{ bearerAuth: [] }]
+      parameters: [{ $ref: '#/components/parameters/idParam' }]
+      responses:
+        '204': { description: Encomenda apagada }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: OAuth2-AccessToken
+
+  parameters:
+    idParam:
+      name: id
+      in: path
+      required: true
+      schema: { type: integer }
+
+  schemas:
+    CategoriaInput:
+      type: object
+      properties:
+        nome: { type: string }
+        descricao: { type: string }
+      required: [nome]
+
+    ProdutoInput:
+      type: object
+      properties:
+        nome: { type: string }
+        descricao: { type: string }
+        preco: { type: number }
+        stock: { type: integer }
+        categoria_id: { type: integer }
+      required: [nome, preco, categoria_id]
+
+    EncomendaInput:
+      type: object
+      properties:
+        estado: { type: string, enum: [pendente, pago, enviado, entregue, cancelado] }
+        linhas:
+          type: array
+          items:
+            type: object
+            properties:
+              produto_id: { type: integer }
+              quantidade: { type: integer }
+      required: [linhas]
