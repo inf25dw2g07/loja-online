@@ -75,17 +75,16 @@ o **requisito 7** — regista na consola o utilizador autenticado em cada pedido
 
 ### 4.3 Autorização (controlo de acesso aos recursos)
 
-Além da autenticação, implementámos uma regra de **autorização** (requisito 15): um utilizador `cliente`
+Além da autenticação, implementámos uma regra de **autorização**: um utilizador `cliente`
 só pode ler, atualizar ou apagar as **suas próprias** encomendas — qualquer tentativa de aceder a uma
 encomenda de outro utilizador devolve `403 Forbidden`. Um utilizador `admin` vê e gere todas as encomendas.
 
 ## 5. Documentação e Testes
 
 - **OpenAPI 3.0**: especificação completa em `api/openapi.yaml`, servida interativamente em `/docs` via
-  Swagger UI (requisito 8).
+  Swagger UI.
 - **Postman Collection**: `postman/LojaOnline.postman_collection.json`, com um pedido de obtenção de token
-  que guarda automaticamente o `access_token` numa variável de coleção, reutilizada pelos restantes pedidos
-  (requisito 11).
+  que guarda automaticamente o `access_token` numa variável de coleção, reutilizada pelos restantes pedidos.
 
 ## 6. Como executar
 
@@ -97,41 +96,6 @@ A API fica disponível em `http://localhost:3000`, a documentação em `http://l
 é inicializado automaticamente com o schema e os dados de seed (`api/sql/init.sql`).
 
 Utilizador de teste: `jsilva` / `password123` (cliente). Utilizador admin: `admin` / `password123`.
-
-## 7. Dificuldades e Aprendizagens
-
-**Integração do `oauth2-server` com um SGBD relacional.** A biblioteca `oauth2-server` é agnóstica em
-relação ao armazenamento — obriga a implementar nós próprios um conjunto de funções (`getClient`, `getUser`,
-`saveToken`, `getAccessToken`, `getRefreshToken`, `revokeToken`) que fazem a ponte entre o protocolo OAuth2 e
-as nossas tabelas MySQL (`oauth_clients`, `oauth_tokens`). Isto exigiu perceber bem a ordem exata em que a
-biblioteca chama cada função durante o grant `password`, e criar as tabelas de apoio (`oauth_clients` e
-`oauth_tokens`) para além das tabelas de negócio.
-
-**Hashing de passwords e portabilidade entre ambientes.** Inicialmente usámos o pacote `bcrypt`, que depende
-de um módulo nativo compilado (C++). Isto revelou-se um problema de portabilidade: o módulo compila de forma
-diferente consoante o sistema operativo e exige ferramentas de build (`python`, `make`, `g++`) nem sempre
-disponíveis — nomeadamente na imagem `node:alpine` usada no Docker. Substituímos por `bcryptjs`, uma
-implementação pura em JavaScript do mesmo algoritmo, sem perda de segurança e com total portabilidade entre
-máquinas e containers.
-
-**Codificação de caracteres (UTF-8) na ligação à base de dados.** Os dados de seed incluem acentuação
-(nomes de categorias e produtos em português). Por omissão, a ligação `mysql2` não negoceia sempre o charset
-`utf8mb4`, o que originava caracteres corrompidos nas respostas JSON. Resolvido explicitando
-`charset: 'utf8mb4'` na configuração da pool de ligações e garantindo que a própria base de dados é criada
-com esse charset no `init.sql`.
-
-**Transações na criação de Encomendas.** Uma encomenda não é um único registo — envolve inserir a encomenda
-e, na mesma operação lógica, todas as suas linhas (`linhas_encomenda`), calculando o total a partir do preço
-atual de cada produto. Para garantir que nunca ficamos com uma encomenda "a meio" (por exemplo, se um dos
-produtos indicados não existir), usámos transações SQL explícitas (`beginTransaction` / `commit` /
-`rollback`), o que nos obrigou a perceber melhor o ciclo de vida de uma ligação da pool (`getConnection` /
-`release`) em vez de usar o pool diretamente.
-
-**Autenticação vs. Autorização.** Foi importante distinguir claramente os dois conceitos na implementação:
-o middleware `autenticar` responde à pergunta "quem é este utilizador?" (401 se não houver token válido); a
-lógica dentro do `encomendasController` responde à pergunta "este utilizador pode fazer isto a este recurso
-específico?" (403 se autenticado mas sem permissão). Ter as duas camadas separadas tornou o código mais fácil
-de testar e de explicar.
 
 ## 8. Conclusão
 
