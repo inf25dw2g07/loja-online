@@ -5,6 +5,7 @@
 **Ano letivo:** 2025/26 — Exame Prático, Época Normal
 **Grupo:** inf25dw2g07 — Rodrigo Vieira, Joao Mendes.
 
+
 ## 1. Introdução
 
 Este relatório descreve a implementação da Parte 2 do trabalho prático: uma **aplicação Web cliente em
