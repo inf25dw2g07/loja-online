@@ -97,7 +97,7 @@ A API fica disponível em `http://localhost:3000`, a documentação em `http://l
 
 Utilizador de teste: `jsilva` / `password123` (cliente). Utilizador admin: `admin` / `password123`.
 
-## 8. Conclusão
+## 7. Conclusão
 
 Os objetivos definidos para a Parte 1 do enunciado foram integralmente cumpridos: uma API REST com os quatro
 verbos HTTP mapeados a operações CRUD, três recursos (Categorias, Produtos, Encomendas) com uma relação 1:n
