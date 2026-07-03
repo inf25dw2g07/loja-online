@@ -3,8 +3,7 @@
 **Unidade Curricular:** Desenvolvimento Web II
 **Instituição:** Universidade da Maia
 **Ano letivo:** 2025/26 — Exame Prático, Época Normal
-**Grupo:** [preencher nº de grupo] — [nomes dos elementos]
-
+**Grupo:** inf25dw2g07 — Rodrigo Vieira, Joao Mendes.
 ---
 
 ## 1. Introdução
